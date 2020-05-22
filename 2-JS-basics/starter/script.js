@@ -137,6 +137,7 @@ Mark and John are trying to compare their BMI (Body Mass Index), which is calcul
 GOOD LUCK 😀
 */
 
+/*
 // Declare all the variables that will be used for this challenge
 var marksBMI, johnsBMI, marksMass, johnsMass, marksHeight, johnsHeight, highestBMI;
 
@@ -160,6 +161,126 @@ console.log(highestBMI);
 
 // Print string
 console.log('Is Mark\'s BMI higher than John\'s? ' + highestBMI ); // Backslash allows you to escape the quotes
+
+*/
+
+/************************
+* If/Else Statements
+*/
+
+/*
+var firstName = 'Quang';
+var civilStatus = 'Single';
+var isMarried = true;
+
+// Console will say is married because isMarried is already defined true.
+if (isMarried) {
+    console.log(firstName + ' is Married');
+} else {
+    console.log(firstName + ' will hopefully be married soon.');
+}
+
+
+var marksBMI, johnsBMI, marksMass, johnsMass, marksHeight, johnsHeight, highestBMI;
+
+johnsHeight = 1.8; // Meters
+johnsMass = 81; // KG
+
+marksHeight = 1.7;
+marksMass = 71;
+
+johnsBMI = johnsMass / (johnsHeight * johnsHeight);
+marksBMI = marksMass / (marksHeight * marksHeight);
+
+console.log(johnsBMI, marksBMI); // Johns BMI 25, Marks BMI 24.6
+
+if(marksBMI > johnsBMI) {
+	console.log('Mark\'s BMI is higher than John\'s.' );
+} else {
+	console.log('John\'s BMI is higher than Marks\'s.' );
+}
+*/
+
+/************************
+* Boolean Logic
+*/
+
+/*
+
+// And (&&) both has to be True, Or (||) only one needs to be True, Not (!) inverts True/False values
+
+var firstName = 'Quang';
+var age = '25';
+
+if (age < 13) {
+	console.log(firstName + ' is a boy.');
+}	else if (age >= 13 && age < 20) {
+	console.log(firstName + ' is a teenager.');
+}	else if (age >= 20 && age < 30) {
+	console.log(firstName + ' is a young man.');
+}   else {
+	console.log(firstName + ' is a man.');
+}
+
+*/
+
+/************************
+* The Ternary Operator and Switch Statements
+*/
+
+var firstName = 'Quang';
+var age = '16';
+
+// Question mark represents if and colon represents else.
+age >= 21 ? console.log(firstName + ' drinks beer')
+: console.log(firstName + ' drinks juice');
+
+var drink = age >= 21 ? 'beer' : 'juice'; // The result of this operator will be assigned to drink
+console.log(drink);
+
+/* What you would write w/o ternary operator
+if (age >= 21) {
+	console.log(firstName + ' drinks beer')
+} else {
+	console.log(firstName + ' drinks juice')
+}
+*/
+
+// Switch Statements
+var job = 'teacher';
+switch (job) {
+	case 'teacher':
+		console.log(firstName + ' teaches kids how to code');
+		break;
+	case 'driver':
+		console.log(firstName + ' drives an uber for a living');
+		break;
+	case 'designer':
+		console.log(firstName + ' designs websites for a living');
+		break;
+	default:
+		console.log(firstName + ' does something else for a living');
+}
+
+
+// Sets the boolean to true b/c we want to compare the expressions below.
+switch (true) {
+	case age < 13:
+		console.log(firstName + ' is a boy.');
+		break;
+	case age >= 13 && age < 20:
+		console.log(firstName + ' is a teenager.');
+		break;
+	case age >= 20 && age < 30:
+		console.log(firstName + ' is a young man.');
+		break;
+	default:
+		console.log(firstName + ' is a man.');
+}
+
+
+
+
 
 
 
