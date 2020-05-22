@@ -88,6 +88,7 @@ console.log(typeof x); // Displays undefined b/c nothing was assign to the varia
 * Basic Precedence
 */
 
+/*
 var thisYear, yearQuang, legalAge
 
 thisYear = 2020;
@@ -119,6 +120,49 @@ x++; // This operator adds one unit to the variable
 console.log(x);
 x--;
 console.log(x);
+*/
+
+/*****************************
+* CODING CHALLENGE 1
+*/
+
+/*
+Mark and John are trying to compare their BMI (Body Mass Index), which is calculated using the formula: BMI = mass / height^2 = mass / (height * height). (mass in kg and height in meter).
+
+1. Store Mark's and John's mass and height in variables
+2. Calculate both their BMIs
+3. Create a boolean variable containing information about whether Mark has a higher BMI than John.
+4. Print a string to the console containing the variable from step 3. (Something like "Is Mark's BMI higher than John's? true").
+
+GOOD LUCK 😀
+*/
+
+// Declare all the variables that will be used for this challenge
+var marksBMI, johnsBMI, marksMass, johnsMass, marksHeight, johnsHeight, highestBMI;
+
+// Assign the height and mass to the variable
+johnsHeight = 1.8; // Meters
+johnsMass = 81; // KG
+
+marksHeight = 1.7;
+marksMass = 71;
+
+// Calculate both BMI
+johnsBMI = johnsMass / (johnsHeight * johnsHeight);
+marksBMI = marksMass / (marksHeight * marksHeight);
+
+// Display both BMIs
+console.log(johnsBMI, marksBMI); // Johns BMI 25, Marks BMI 24.6
+
+// Create a boolean to see to has the higher BMI
+highestBMI = marksBMI > johnsBMI;
+console.log(highestBMI);
+
+// Print string
+console.log('Is Mark\'s BMI higher than John\'s? ' + highestBMI ); // Backslash allows you to escape the quotes
+
+
+
 
 
 
