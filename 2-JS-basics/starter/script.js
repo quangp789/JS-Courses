@@ -227,7 +227,7 @@ if (age < 13) {
 /************************
 * The Ternary Operator and Switch Statements
 */
-
+/*
 var firstName = 'Quang';
 var age = '16';
 
@@ -238,13 +238,13 @@ age >= 21 ? console.log(firstName + ' drinks beer')
 var drink = age >= 21 ? 'beer' : 'juice'; // The result of this operator will be assigned to drink
 console.log(drink);
 
-/* What you would write w/o ternary operator
+// What you would write w/o ternary operator
 if (age >= 21) {
 	console.log(firstName + ' drinks beer')
 } else {
 	console.log(firstName + ' drinks juice')
 }
-*/
+
 
 // Switch Statements
 var job = 'teacher';
@@ -277,15 +277,67 @@ switch (true) {
 	default:
 		console.log(firstName + ' is a man.');
 }
+*/
 
+/************************
+* Truthy and Falsy values and equality operators
+*/
 
+// falsy values: undefined, null, 0, '', NaN (not a number)
+// truthy value: Not falsy values
 
+/*
+var height;
 
+height = 23;
 
+if (height || height === 0) {
+	console.log('Variable is defined');
+} else {
+	console.log('Variable has not defined');
+}
 
+// Equality Operators
+// '==' converts the string 23 into a number
+if (height == '23') {
+	console.log(' The == operator does type coercion!');
+}
+*/
 
+/*****************************
+* CODING CHALLENGE 2
+*/
 
+/*
+John and Mike both play basketball in different teams. In the latest 3 games, John's team scored 89, 120 and 103 points, while Mike's team scored 116, 94 and 123 points.
 
+1. Calculate the average score for each team
+2. Decide which teams wins in average (highest average score), and print the winner to the console. Also include the average score in the output.
+3. Then change the scores to show different winners. Don't forget to take into account there might be a draw (the same average score)
 
+4. EXTRA: Mary also plays basketball, and her team scored 97, 134 and 105 points. Like before, log the average winner to the console. HINT: you will need the && operator to take the decision. If you can't solve this one, just watch the solution, it's no problem :)
+5. Like before, change the scores to generate different winners, keeping in mind there might be draws.
 
+GOOD LUCK 😀
+*/
 
+// Declare the variables
+var johnsAverage, mikesAverage, marysAverage;
+
+// Calculate the average
+johnsAverage = (134 + 120 + 103) / 3; //104
+mikesAverage = (116 + 95 + 123) / 3; //111
+marysAverage = (97 + 134 + 105) / 3; //112
+
+console.log(johnsAverage, mikesAverage, marysAverage);
+
+// Display and log the score depending on who has the highest average using if-else
+if (johnsAverage > mikesAverage && johnsAverage > marysAverage) {
+	console.log('John\'s team is the winner with an average of ' + johnsAverage + ' points.');
+} else if (mikesAverage > johnsAverage && mikesAverage > marysAverage) {
+	console.log('Mike\'s team is the winner with an average of ' + mikesAverage + ' points.');
+} else if (marysAverage > johnsAverage && marysAverage > mikesAverage) {
+	console.log('Mary\'s team is the winner with an average of ' + marysAverage + ' points.');
+} else {
+	console.log('There is a draw between both teams');
+}
