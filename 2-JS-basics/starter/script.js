@@ -320,6 +320,7 @@ John and Mike both play basketball in different teams. In the latest 3 games, Jo
 
 GOOD LUCK 😀
 */
+/*
 
 // Declare the variables
 var johnsAverage, mikesAverage, marysAverage;
@@ -341,3 +342,163 @@ if (johnsAverage > mikesAverage && johnsAverage > marysAverage) {
 } else {
 	console.log('There is a draw between both teams');
 }
+
+*/
+
+/************************
+* Function
+*/
+
+/*
+function calculateAge(birthYear) {
+	return 2018 - birthYear;
+}
+
+var ageQuang = calculateAge(1994); //1994 is the birthyear that we pass into the function when calling the function
+var ageMike = calculateAge(1986);
+var ageMary = calculateAge(1990);
+console.log(ageQuang, ageMary, ageMike);
+
+// Create a function that youll be passing in with the following arguments
+function yearsUntilRetirement(year, firstName) {
+	var age = calculateAge(year); // Call the calculateAge function by passing your birthyear. It will then store into the age variable.
+	var retirement = 65 - age; // Now calculate years left before you retire at 65
+
+	if (retirement > 0) {
+	console.log(firstName + ' retires in ' + retirement + ' years. '); // Log the result into console.
+	} else {
+		console.log(firstName + ' is already retired.');
+	}
+}
+
+yearsUntilRetirement(1994, 'Quang');
+yearsUntilRetirement(1935, 'Mike');
+yearsUntilRetirement(1990, 'Mary');
+*/
+
+/************************
+* Function Statements and expressions
+*/
+
+/*
+// Function declaration
+// EX: function whatDoYouDo(job, firstName) {}
+
+
+// Functions can be stored into a variable or called Function Expression
+var whatDoYouDo = function(job, firstName) {
+	switch(job) {
+		case 'teacher':
+			return firstName + ' teaches kids how to code.'; // Return does not only return the value but also completes the function
+		case 'driver':
+			return firstName + ' drives a truck for a living.';
+		case 'designer':
+			return firstName + ' designs websites.';
+		default:
+			return firstName + ' does something else.';
+	}
+}
+
+console.log(whatDoYouDo('designer', 'Quang')); // You can also directly log the function as well.
+console.log(whatDoYouDo('server', 'Mark'));
+console.log(whatDoYouDo('teacher', 'Mary'));
+
+// Function Statement EX: 2+3 which will return 5
+// Function Expression EX: whatDoYouDo function is an expression because it produces a result. EX: typeof 23 returns "number".
+*/
+
+/************************
+* Arrays
+*/
+
+// 2 ways you can create an array. Initialize the array
+var names = ['Quang', 'John', 'Mark']; // Element goes as the following: 0, 1, 2
+var years = new Array(1994, 1969, 1948);
+
+console.log(names[2]); // Calls the whole array
+console.log(names.length); // Shows how many elements are in the array
+
+// Mutate the array data
+names[1] = 'Mary'; // Select the array and positon and give it a new name.
+names[names.length] = 'June'; // Adds a new string to the next element postion in the array.
+console.log(names);
+
+// Different data types
+var quang = ['Quang', 'Phong', '1994', 'IT', false];
+
+quang.push('blue'); // Push method allows you to add a new element to the array as well.
+quang.unshift('Mr'); // Unshift adds a new element to the beginning of the array.
+console.log(quang);
+
+quang.pop(); // Removes the last element of the array.
+quang.pop();
+quang.shift(); // Removes the first element of the array
+console.log(quang);
+
+console.log(quang.indexOf(1994)); // Returns the position of the element of the array. Will return -1 if element is not in the array
+
+// We ask if designer is in the array. Which is not which will then equal to -1 which means that I am not a designer.
+var isDesigner = quang.indexOf('designer') === -1 ? 'Quang is NOT a designer.' : 'Quang IS a designer';
+console.log(isDesigner);
+
+/*****************************
+* CODING CHALLENGE 3
+*/
+
+/*
+John and his family went on a holiday and went to 3 different restaurants. The bills were $124, $48 and $268.
+
+To tip the waiter a fair amount, John created a simple tip calculator (as a function). He likes to tip 20% of the bill when the bill is less than $50, 15% when the bill is between $50 and $200, and 10% if the bill is more than $200.
+
+In the end, John would like to have 2 arrays:
+1) Containing all three tips (one for each bill)
+2) Containing all three final paid amounts (bill + tip).
+
+(NOTE: To calculate 20% of a value, simply multiply it with 20/100 = 0.2)
+
+GOOD LUCK 😀
+*/
+
+// Create a function to calculate tip
+function calculateTip(bill) {
+
+	// Create a variable that contains the percentage that will need to be tipped
+	var percentage;
+
+	if (bill < 50) {
+		percentage = .2;
+	} else if (200 < bill <= 50) {
+		percentage = .15;
+	} else {
+		percentage = .1;
+	}
+
+	// Return the calculated tip
+	return percentage * bill;
+}
+
+// Test the function
+console.log(calculateTip(100));
+
+// Create a variable containing the bills
+var bills = [];
+bills.push(124, 48, 268)
+
+// Pass the array into the function and store it in the variable
+var tips = [calculateTip(bills[0]), calculateTip(bills[1]), calculateTip(bills[2])];
+
+// Add the calculated tip to the array and store it into a variable
+var totalAmount = [(tips[0] + bills[0]), (tips[1] + bills[1]), (tips[2] + bills[2])];
+
+// Display the tips and the total amount.
+console.log(tips, totalAmount);
+
+
+
+
+
+
+
+
+
+
