@@ -534,6 +534,7 @@ console.log(jane);
 * Objects and Methods
 */
 
+/*
 var quang = {
 	firstName: 'Quang',
 	lastName: 'Phong',
@@ -548,7 +549,7 @@ var quang = {
 
 quang.calcAge();
 console.log(quang);
-
+*/
 
 /*****************************
 * CODING CHALLENGE 4
@@ -565,6 +566,7 @@ Remember: BMI = mass / height^2 = mass / (height * height). (mass in kg and heig
 GOOD LUCK 😀
 */
 
+/*
 // Create an object literial of both Mark and John
 var mark = {
 	fullName: 'Mark Smith',
@@ -601,5 +603,51 @@ if (mark.BMI > john.BMI) {
 } else {
 	console.log('Both has the same BMI. John: ' + john.BMI + ' Mark: ' + mark.BMI);
 }
+*/
 
+/************************
+* Loops and Iteration
+*/
 
+/* For loops has 3 parts. A counter variable, a condition, and a counter update
+Starts at:
+i = 0, 0 < 10 which is true, log i to console, i++
+i = 1, 1 < 10 which is true, log i to console, i++ ...
+i = 10, 10 < 10 which is false, loop ends
+
+for(var i = 0; i < 10; i++) {
+	console.log(i);
+}
+
+// Loop will end at 19 b/c it adds by 2 which will go over
+for(var i = 1; i < 20; i += 2) {
+	console.log(i);
+}
+
+// While loop
+var i = 0;
+while(i < quang.length) {
+	console.log(quang[i]);
+	i++
+}
+*/
+
+// Continue and break statements
+
+var quang = ['Quang', 'Phong', 1994, 'IT', false];
+// quang.length is telling the loop to read the whole length of the loop.
+for(var i = 0; i < quang.length; i++) {
+	if (typeof quang[i] !== 'string') continue; // If the typeof the element in the array is not a string, then continue
+	console.log(quang[i]); // You want to console the array starting at postion i which is set to 0 (var i = 0)
+}
+
+for(var i = 0; i < quang.length; i++) {
+	if (typeof quang[i] !== 'string') break; // If the typeof the element in the array is not a string, then stop
+	console.log(quang[i]);
+}
+
+// Looping backwards
+// We want to start i at the very last element. Which is setting the length of the element - 1. We would then want the loop to decrease until we hit 0.
+for(var i = quang.length - 1; i >= 0; i--) {
+	console.log(quang[i]);
+}
