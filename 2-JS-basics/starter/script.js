@@ -411,6 +411,7 @@ console.log(whatDoYouDo('teacher', 'Mary'));
 * Arrays
 */
 
+/*
 // 2 ways you can create an array. Initialize the array
 var names = ['Quang', 'John', 'Mark']; // Element goes as the following: 0, 1, 2
 var years = new Array(1994, 1969, 1948);
@@ -440,6 +441,7 @@ console.log(quang.indexOf(1994)); // Returns the position of the element of the 
 // We ask if designer is in the array. Which is not which will then equal to -1 which means that I am not a designer.
 var isDesigner = quang.indexOf('designer') === -1 ? 'Quang is NOT a designer.' : 'Quang IS a designer';
 console.log(isDesigner);
+*/
 
 /*****************************
 * CODING CHALLENGE 3
@@ -457,7 +459,7 @@ In the end, John would like to have 2 arrays:
 (NOTE: To calculate 20% of a value, simply multiply it with 20/100 = 0.2)
 
 GOOD LUCK 😀
-*/
+
 
 // Create a function to calculate tip
 function calculateTip(bill) {
@@ -492,13 +494,112 @@ var totalAmount = [(tips[0] + bills[0]), (tips[1] + bills[1]), (tips[2] + bills[
 
 // Display the tips and the total amount.
 console.log(tips, totalAmount);
+*/
+
+/************************
+* Objects and Properties
+*/
+
+/*
+// Objects contains a key-value pair. Order does not matter in an object but does in an array
+// Create an object literal
+var quang = {
+	firstName: 'Quang',
+	lastName: 'Phong',
+	birthYear: '1994',
+	family: ['Candy', 'Kevin', 'Christine'],
+	job: 'IT',
+	isMarried: false
+};
+
+console.log(quang.firstName); // Using the dot we can access any of the key-value pair within the object
+console.log(quang['lastName']); // You can use a bracket and put the key into a string to access the value
+var x = 'birthYear';
+console.log(quang[x]); // Can also store it in a variable
+
+// Mutating the object
+quang.job = 'designer';
+quang['isMarried'] = true;
+console.log(quang);
+
+// Another way to create an object
+var jane = new Object();
+jane.name = 'Jane';
+jane.birthYear = 1990;
+jane['lastName'] = 'Smith';
+console.log(jane);
+*/
+
+/************************
+* Objects and Methods
+*/
+
+var quang = {
+	firstName: 'Quang',
+	lastName: 'Phong',
+	birthYear: '1990',
+	family: ['Candy', 'Kevin', 'Christine'],
+	job: 'IT',
+	isMarried: false,
+	calcAge: function() { // You do not need to put in an argument since you are using "this" to access the birthYear within the object.
+		this.age = 2020 - this.birthYear; // The keyword "this" allows you to access the the birthYear within the object. this.age also creates an age key
+	}
+};
+
+quang.calcAge();
+console.log(quang);
 
 
+/*****************************
+* CODING CHALLENGE 4
+*/
 
+/*
+Let's remember the first coding challenge where Mark and John compared their BMIs. Let's now implement the same functionality with objects and methods.
+1. For each of them, create an object with properties for their full name, mass, and height
+2. Then, add a method to each object to calculate the BMI. Save the BMI to the object and also return it from the method.
+3. In the end, log to the console who has the highest BMI, together with the full name and the respective BMI. Don't forget they might have the same BMI.
 
+Remember: BMI = mass / height^2 = mass / (height * height). (mass in kg and height in meter).
 
+GOOD LUCK 😀
+*/
 
+// Create an object literial of both Mark and John
+var mark = {
+	fullName: 'Mark Smith',
+	marksHeight: '1.7', // Meters
+	marksMass: '71', // KG
+// Create a function to calculate Mark's BMI. Do the same for John.
+	calcBMI: function() {
+		this.BMI = this.marksMass / (this.marksHeight * this.marksHeight);
+	}
 
+}
 
+// Test to see if BMI function works and log to the console.
+mark.calcBMI();
+//console.log(mark.BMI);
+
+var john = {
+	fullName: 'John Doe',
+	johnsHeight: '1.8', // Meters
+	johnsMass: '81', // KG
+	calcBMI: function() {
+		this.BMI = this.johnsMass / (this.johnsHeight * this.johnsHeight);
+	}
+}
+
+john.calcBMI();
+console.log(mark.BMI, john.BMI)
+
+// Log and see who has the higher BMI
+if (mark.BMI > john.BMI) {
+	console.log(mark.fullName + ' has a higher BMI with a total of ' + mark.BMI + ' BMI.');
+} else if (john.BMI > mark.BMI) {
+	console.log(john.fullName + ' has a higher BMI with a total of ' + john.BMI + ' BMI.');
+} else {
+	console.log('Both has the same BMI. John: ' + john.BMI + ' Mark: ' + mark.BMI);
+}
 
 
