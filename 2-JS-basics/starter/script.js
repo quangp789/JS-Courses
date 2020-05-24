@@ -651,3 +651,122 @@ for(var i = 0; i < quang.length; i++) {
 for(var i = quang.length - 1; i >= 0; i--) {
 	console.log(quang[i]);
 }
+
+/*****************************
+* CODING CHALLENGE 5
+*/
+
+/*
+Remember the tip calculator challenge? Let's create a more advanced version using everything we learned!
+
+This time, John and his family went to 5 different restaurants. The bills were $124, $48, $268, $180 and $42.
+John likes to tip 20% of the bill when the bill is less than $50, 15% when the bill is between $50 and $200, and 10% if the bill is more than $200.
+
+Implement a tip calculator using objects and loops:
+1. Create an object with an array for the bill values
+2. Add a method to calculate the tip
+3. This method should include a loop to iterate over all the paid bills and do the tip calculations
+4. As an output, create 1) a new array containing all tips, and 2) an array containing final paid amounts (bill + tip). HINT: Start with two empty arrays [] as properties and then fill them up in the loop.
+
+
+EXTRA AFTER FINISHING: Mark's family also went on a holiday, going to 4 different restaurants. The bills were $77, $375, $110, and $45.
+Mark likes to tip 20% of the bill when the bill is less than $100, 10% when the bill is between $100 and $300, and 25% if the bill is more than $300 (different than John).
+
+5. Implement the same functionality as before, this time using Mark's tipping rules
+6. Create a function (not a method) to calculate the average of a given array of tips. HINT: Loop over the array, and in each iteration store the current sum in a variable (starting from 0). After you have the sum of the array, divide it by the number of elements in it (that's how you calculate the average)
+7. Calculate the average tip for each family
+8. Log to the console which family paid the highest tips on average
+
+GOOD LUCK 😀
+*/
+
+// Create an object containing name, an array with bills, and a calculate tips function
+var john = {
+	fullName: 'John Smith',
+	bills: [124, 48, 268, 180, 42],
+	calculateTips: function() {
+		// Create empty arrays to store both the tips and total bills
+		this.tips = [];
+		this.totalBill = [];
+		// Create a for loop to loop the whole array.
+		for(var i = 0; i < this.bills.length; i++) {
+			// Create a variable that contains the percentage that will need to be tipped
+			var percentage;
+			var bill = this.bills[i]; // Store the current postion of the bill into a variable
+			// Start to loop at the current position of the array with [i]
+			if (bill < 50) {
+				percentage = .2;
+			} else if (bill >= 50 && bill <= 200) {
+				percentage = .15;
+			} else {
+				percentage = .1;
+			}
+
+			// Add the result to the empty array with the calculation
+			this.tips[i] = bill * percentage;
+			this.totalBill [i] = bill + bill * percentage;
+		}
+	}
+}
+
+
+// Create Marks object
+var mark = {
+	fullName: 'Mark Miller',
+	bills: [77, 475, 110, 45],
+	calculateTips: function() {
+		// Create empty arrays to store both the tips and total bills
+		this.tips = [];
+		this.totalBill = [];
+		// Create a for loop to loop the whole array.
+		for(var i = 0; i < this.bills.length; i++) {
+			// Create a variable that contains the percentage that will need to be tipped
+			var percentage;
+			var bill = this.bills[i]; // Store the current postion of the bill into a variable
+			// Start to loop at the current position of the array with [i]
+			if (bill < 100) {
+				percentage = .2;
+			} else if (bill >= 100 && bill <=300) {
+				percentage = .1;
+			} else {
+				percentage = .25;
+			}
+
+			// Add the result to the empty array with the calculation
+			this.tips[i] = bill * percentage;
+			this.totalBill [i] = bill + bill * percentage;
+		}
+	}
+}
+
+// Create a function that calcualted the average tips. Passing in the tips array from both John and Mark
+function calculateAverage(tips) {
+	// Create a variable that starts at 0
+	var sum = 0;
+	for(var i = 0; i < tips.length; i++) {
+		sum = sum + tips[i]; // You want to add the sum + tips[i] which is at the current position // [2,4,6] > [0,2,8,12]
+	}
+
+	// Return the total sum of the tips and divided by the number of bills in the array to get the average
+	return sum / tips.length;
+}
+
+// Perform the calculations of the tips of each person
+john.calculateTips();
+mark.calculateTips();
+
+// Calculate the average tips of both john and mark and store it into a new variable within the object
+john.averageTips = calculateAverage(john.tips);
+mark.averageTips = calculateAverage(mark.tips);
+
+// Log the result to the console.
+console.log(john , mark);
+
+// Log to console which family paid the highest tips
+if (john.average > mark.averageTips) {
+	console.log('John\'s family paid the higher averager of ' + john.averageTips + ' dollars.');
+} else if (mark.averageTips > john.averageTips) {
+	console.log('Mark\'s family paid the higher averave of ' + mark.averageTips + ' dollars.');
+} else {
+	console.log('Both Mark and John\'s family had the same average of tips. Mark\'s tips: ' + mark.averageTips + ' John\'s tips: ' + john.averageTips);
+}
