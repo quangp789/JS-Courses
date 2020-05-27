@@ -9,72 +9,72 @@ GAME RULES:
 
 */
 
-// Create variables that is needed for the game
-var scores, roundScore, activePlayer;
+// Create variables to keep track of the scores and current player.
+var scores, roundScore, activePlayer, gamePlaying;
 
-// Keeps track of both players current score, the rolled score, and who the current player is
-scores = [0, 0];
-roundScore = 0;
-activePlayer = 0;
+// Run the function to start the new game when the page loads
+newGame();
 
-// Hide the dice image. Select the style method and set the CSS property display to none. Inline styling.
-document.querySelector('.dice').style.display = 'none';
+/* BUTTONS */
 
-// Select all the elements for all of the players score and current score. Query selector also would work here
-document.getElementById('score-0').textContent = '0';
-document.getElementById('score-1').textContent = '0';
-document.getElementById('current-0').textContent = '0';
-document.getElementById('current-1').textContent = '0';
+// Reset the game when the button is clicked
+document.querySelector('.btn-new').addEventListener('click', newGame);
 
-// Generate a random number when the button is clicked. Display this on the active players round score.
+// Roll the dice when the button is clicked. Display this on the active players round score.
 document.querySelector('.btn-roll').addEventListener('click', function() {
+	if(gamePlaying) {
+		// Generate a random number from 1-6
+		var dice = Math.floor(Math.random() * 6) + 1;
 
-	// Roll the dice
-	var dice = Math.floor(Math.random() * 6) + 1;
+		// Display the result of the roll
+		var diceDOM = document.querySelector('.dice'); // Select the dice CLASS and store it in a variable.
+		diceDOM.style.display = 'block'; // Block will show the dice image
+		diceDOM.src = 'dice-' + dice + '.png'; // Update the image depending on what the dice rolls.
 
-	// Display the result
-	var diceDOM = document.querySelector('.dice'); // Select the dice image and store it in a variable.
-	diceDOM.style.display = 'block'; // Block will show the hidden image.
-	diceDOM.src = 'dice-' + dice + '.png'; // Update the image depending on what the dice rolls.
-
-	// Update the round score only if its not a 1
-	if (dice !== 1) {
-		// Add score to round score
-		roundScore += dice;
-		// Update the round score to the current player div
-		document.querySelector('#current-' + activePlayer).textContent = roundScore;
-	} else {
-		switchPlayer();
+		// Update the round score only if its NOT a 1
+		if (dice !== 1) {
+			// Add score to round score
+			roundScore += dice;
+			// Update the round score to the current player div
+			document.querySelector('#current-' + activePlayer).textContent = roundScore;
+		} else {
+			switchPlayer();
+		}
 	}
 });
 
 document.querySelector('.btn-hold').addEventListener('click', function() {
-	// Add CURRENT roundScore to GLOBAL score
-	scores[activePlayer] += roundScore
+	if (gamePlaying) {
 
-	// Update the score of the current active player to the GLOBAL UI
-	document.getElementById('score-' + activePlayer).textContent = scores[activePlayer]
+		// Add CURRENT roundScore to GLOBAL score
+		scores[activePlayer] += roundScore
 
-	// Check if player won the game
-	if (scores[activePlayer] >= 10) {
-		document.getElementById('name-' + activePlayer).innerHTML = 'Winner!';
-		document.getElementById('dice2').style.display = 'none';
-		document.querySelector('.player-' + activePlayer + '-panel').classList.add('winner'); // Add the winner class from CSS
-		document.querySelector('.player-' + activePlayer + '-panel').classList.remove('active'); // Removes the active class from css from the panel
-	} else {
-		// Switch players once the button is clicked
-		switchPlayer();
+		// Update the score of the current active player to the GLOBAL UI
+		document.getElementById('score-' + activePlayer).textContent = scores[activePlayer]
+
+		// Check if player won the game
+		if (scores[activePlayer] >= 10) {
+			document.getElementById('name-' + activePlayer).innerHTML = 'Winner!';
+			document.getElementById('dice2').style.display = 'none';
+			document.querySelector('.player-' + activePlayer + '-panel').classList.add('winner'); // Add the winner class from CSS
+			document.querySelector('.player-' + activePlayer + '-panel').classList.remove('active'); // Removes the active class from css from the panel
+			gamePlaying = false;
+		} else {
+			// Switch players once the button is clicked
+			switchPlayer();
+		}
+
 	}
+});
 
+/* FUNCTIONS */
 
-})
-
-
+// A function to switch player.
 function switchPlayer() {
 		// Change to next players turn. Question mark is the if
 		activePlayer === 0 ? activePlayer = 1 : activePlayer = 0;
 
-		// Set the roundScore back to 0 as well as showing on the div
+		// Set the roundScore back to 0 for both players
 		roundScore = 0;
 		document.getElementById('current-0').textContent = '0';
 		document.getElementById('current-1').textContent = '0';
@@ -87,6 +87,34 @@ function switchPlayer() {
 		document.getElementById('dice2').style.display = 'none';
 }
 
+// A function to restart the game
+function newGame() {
+	// Keeps track of both players current score, the rolled score, and who the current player is
+	scores = [0, 0];
+	roundScore = 0;
+	activePlayer = 0;
+	gamePlaying = true;
+
+	// Hide the dice image. Select the style method and set the CSS property display to none. Inline styling.
+	document.querySelector('.dice').style.display = 'none';
+
+	// Select all the elements for all of the players score and current score and set it to 0. Query selector also would work here
+	document.getElementById('score-0').textContent = '0';
+	document.getElementById('score-1').textContent = '0';
+	document.getElementById('current-0').textContent = '0';
+	document.getElementById('current-1').textContent = '0';
+
+	// Change the names and its styling back to its original effects
+	document.getElementById('name-0').innerHTML = 'Player 1';
+	document.getElementById('name-1').innerHTML = 'Player 2';
+	document.querySelector('.player-0-panel').classList.remove('winner');
+	document.querySelector('.player-1-panel').classList.remove('winner');
+	document.querySelector('.player-0-panel').classList.remove('active');
+	document.querySelector('.player-1-panel').classList.remove('active');
+	document.querySelector('.player-0-panel').classList.add('active');
+}
+
+/* NOTES */
 
 // This is the "setter" b/c this is where we set the result of the rolled dice.
 // document.querySelector('#current-' + activePlayer).textContent = dice;
