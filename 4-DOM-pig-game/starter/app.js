@@ -7,10 +7,18 @@ GAME RULES:
 - The player can choose to 'Hold', which means that his ROUND score gets added to his GLBAL score. After that, it's the next player's turn
 - The first player to reach 100 points on GLOBAL score wins the game
 
+Additional Challenges
+Change the game to follow these rules:
+
+1. A player looses his ENTIRE score when he rolls two 6 in a row. After that, it's the next player's turn. (Hint: Always save the previous dice roll in a separate variable)
+2. Add an input field to the HTML where players can set the winning score, so that they can change the predefined score of 100. (Hint: you can read that value with the .value property in JavaScript. This is a good oportunity to use google to figure this out :)
+3. Add another dice to the game, so that there are two dices now. The player looses his current score when one of them is a 1. (Hint: you will need CSS to position the second dice, so take a look at the CSS code for the first one.)
+
+
 */
 
-// Create variables to keep track of the scores and current player.
-var scores, roundScore, activePlayer, gamePlaying;
+// Variables
+var scores, roundScore, activePlayer, gamePlaying, lastDice;
 
 // Run the function to start the new game when the page loads
 newGame();
@@ -24,15 +32,33 @@ document.querySelector('.btn-new').addEventListener('click', newGame);
 document.querySelector('.btn-roll').addEventListener('click', function() {
 	if(gamePlaying) {
 		// Generate a random number from 1-6
-		var dice = Math.floor(Math.random() * 6) + 1;
+		var dice1 = Math.floor(Math.random() * 6) + 1;
+		var dice2 = Math.floor(Math.random() * 6) + 1;
 
 		// Display the result of the roll
-		var diceDOM = document.querySelector('.dice'); // Select the dice CLASS and store it in a variable.
-		diceDOM.style.display = 'block'; // Block will show the dice image
-		diceDOM.src = 'dice-' + dice + '.png'; // Update the image depending on what the dice rolls.
+		document.getElementById('dice-1').style.display = 'block' // Select the dice CLASS and store it in a variable.
+		document.getElementById('dice-2').style.display = 'block' // Block will show the image
+		document.getElementById('dice-1').src = 'dice-' + dice1 + '.png'; // Update the image depending on what the dice rolls.
+		document.getElementById('dice-2').src = 'dice-' + dice2 + '.png';
 
 		// Update the round score only if its NOT a 1
-		if (dice !== 1) {
+		if (dice1 !== 1 && dice2 !== 1) {
+			// Add score to round score
+			roundScore += dice1 + dice2;
+			// Update the round score to the current player div
+			document.querySelector('#current-' + activePlayer).textContent = roundScore;
+		} else {
+			switchPlayer();
+		}
+
+		/* For challenge #2 only
+		if (dice === 6 && lastDice === 6) {
+			// Set active player score back to 0
+			scores[activePlayer] = 0;
+			// Change Dom back to 0
+			document.getElementById('score-' + activePlayer).textContent = '0';
+			switchPlayer();
+		} else if (dice !== 1) { // Update the round score only if its NOT a 1
 			// Add score to round score
 			roundScore += dice;
 			// Update the round score to the current player div
@@ -40,6 +66,10 @@ document.querySelector('.btn-roll').addEventListener('click', function() {
 		} else {
 			switchPlayer();
 		}
+
+		// Store the last dice value roll
+		lastDice = dice;
+		*/
 	}
 });
 
@@ -47,15 +77,29 @@ document.querySelector('.btn-hold').addEventListener('click', function() {
 	if (gamePlaying) {
 
 		// Add CURRENT roundScore to GLOBAL score
-		scores[activePlayer] += roundScore
+		scores[activePlayer] += roundScore;
 
-		// Update the score of the current active player to the GLOBAL UI
-		document.getElementById('score-' + activePlayer).textContent = scores[activePlayer]
+		// Update the score of the current active player
+		document.getElementById('score-' + activePlayer).textContent = scores[activePlayer];
+
+		// Store the input into the variable
+		var declaredScore = document.querySelector('.final-score').value;
+		var winningScore;
+
+		// Check if the textbox is empty
+		if(declaredScore) {
+			// We check by putting out input into a variable.
+			winningScore = declaredScore;
+		} else {
+			// We set a default winning score
+			winningScore = 100;
+		}
 
 		// Check if player won the game
-		if (scores[activePlayer] >= 10) {
+		if (scores[activePlayer] >= winningScore) {
 			document.getElementById('name-' + activePlayer).innerHTML = 'Winner!';
-			document.getElementById('dice2').style.display = 'none';
+			document.getElementById('dice-1').style.display = 'none';
+			document.getElementById('dice-2').style.display = 'none';
 			document.querySelector('.player-' + activePlayer + '-panel').classList.add('winner'); // Add the winner class from CSS
 			document.querySelector('.player-' + activePlayer + '-panel').classList.remove('active'); // Removes the active class from css from the panel
 			gamePlaying = false;
@@ -84,7 +128,8 @@ function switchPlayer() {
 		document.querySelector('.player-1-panel').classList.toggle('active'); // Toggle states if its there add, if not remove it.
 
 		// Hide the dice when it switches players
-		document.getElementById('dice2').style.display = 'none';
+		document.getElementById('dice-1').style.display = 'none';
+		document.getElementById('dice-2').style.display = 'none';
 }
 
 // A function to restart the game
@@ -96,7 +141,8 @@ function newGame() {
 	gamePlaying = true;
 
 	// Hide the dice image. Select the style method and set the CSS property display to none. Inline styling.
-	document.querySelector('.dice').style.display = 'none';
+	document.getElementById('dice-1').style.display = 'none';
+	document.getElementById('dice-2').style.display = 'none';
 
 	// Select all the elements for all of the players score and current score and set it to 0. Query selector also would work here
 	document.getElementById('score-0').textContent = '0';
