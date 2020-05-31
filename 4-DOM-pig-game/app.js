@@ -127,9 +127,7 @@ function switchPlayer() {
 		document.querySelector('.player-0-panel').classList.toggle('active'); // Classlist selects the class.
 		document.querySelector('.player-1-panel').classList.toggle('active'); // Toggle states if its there add, if not remove it.
 
-		// Hide the dice when it switches players
-		document.getElementById('dice-1').style.display = 'none';
-		document.getElementById('dice-2').style.display = 'none';
+		hideDice();
 }
 
 // A function to restart the game
@@ -140,9 +138,7 @@ function newGame() {
 	activePlayer = 0;
 	gamePlaying = true;
 
-	// Hide the dice image. Select the style method and set the CSS property display to none. Inline styling.
-	document.getElementById('dice-1').style.display = 'none';
-	document.getElementById('dice-2').style.display = 'none';
+	hideDice();
 
 	// Select all the elements for all of the players score and current score and set it to 0. Query selector also would work here
 	document.getElementById('score-0').textContent = '0';
@@ -158,6 +154,12 @@ function newGame() {
 	document.querySelector('.player-0-panel').classList.remove('active');
 	document.querySelector('.player-1-panel').classList.remove('active');
 	document.querySelector('.player-0-panel').classList.add('active');
+}
+
+function hideDice() {
+	// Hide the dice image. Select the style method and set the CSS property display to none. Inline styling.
+	document.getElementById('dice-1').style.display = 'none';
+	document.getElementById('dice-2').style.display = 'none';
 }
 
 /* NOTES */
