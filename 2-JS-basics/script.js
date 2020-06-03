@@ -763,7 +763,7 @@ mark.averageTips = calculateAverage(mark.tips);
 console.log(john , mark);
 
 // Log to console which family paid the highest tips
-if (john.average > mark.averageTips) {
+if (john.averageTips > mark.averageTips) {
 	console.log('John\'s family paid the higher averager of ' + john.averageTips + ' dollars.');
 } else if (mark.averageTips > john.averageTips) {
 	console.log('Mark\'s family paid the higher averave of ' + mark.averageTips + ' dollars.');
