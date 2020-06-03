@@ -74,6 +74,7 @@ EX: sony.hasOwnProperty('name') > true
 * Objects.create
 */
 
+/*
 var personProto = {
 	calculateAge: function() {
 		console.log(2020 - this.yearOfBirth);
@@ -92,4 +93,88 @@ var jane = Object.create(personProto,
 	yearOfBrith: {value: 1969},
 	job: {value: 'designer'}
 });
+*/
+
+/************************
+* Primitives vs Objects
+*/
+
+/*
+// Primities
+var a = 23;
+var b = a;
+a = 46;
+
+console.log(a); // Displays 46
+console.log(b); // Displays 23
+
+// Objects
+var object1 = {
+	name: 'Quang',
+	age: 26
+};
+var object2 = object1;
+object1.age = 30;
+
+console.log(object1.age); // Both displays 30 since no new object was created
+console.log(object2.age); // Change was reflect on object two since object one was refering object one
+
+// Functions
+var age = 27;
+var object = {
+	name: 'Jonas',
+	city: 'Des Moines'
+};
+
+function change(a, b) {
+	a = 30;
+	b.city = 'San Francisco'
+};
+
+change(age, object)
+console.log(age); // Age stays the same 27
+console.log(object.city); // City changes to San Francisco
+*/
+
+/************************
+* Passing Function as Arguments
+*/
+
+var years = [1990, 1965, 2005, 1994, 2010];
+
+function arrayCalc(arr, fn) {
+	var arrRes = [];
+	for(var i = 0; i < arr.length; i++) {
+		arrRes.push(fn(arr[i])); // You loop thought the year array which is inserted into the function, that is pushed into the array.
+	}
+	return arrRes; // Return new array
+}
+
+// El stand for element in this case a generic one that we use.
+
+function calculateAge(el) {
+	return 2020 - el;
+}
+
+function isFullAge(el) {
+	return el >= 21;
+}
+
+function maxHeartRate(el) {
+	if ( el >= 18 && el <= 81) {
+		return Math.round(206.9 - (0.67 * el));
+	}
+	else {
+		return -1;
+	}
+
+}
+
+var ages = arrayCalc(years, calculateAge); // Since its a call back function (A function you want to call LATER), so you do no need parentheses.
+var legalAge = arrayCalc(ages, isFullAge);
+var heartRates = arrayCalc(ages, maxHeartRate);
+
+console.log(ages);
+console.log(legalAge);
+console.log(heartRates);
 
