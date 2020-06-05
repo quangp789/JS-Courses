@@ -140,6 +140,7 @@ console.log(object.city); // City changes to San Francisco
 * Passing Function as Arguments
 */
 
+/*
 var years = [1990, 1965, 2005, 1994, 2010];
 
 function arrayCalc(arr, fn) {
@@ -177,4 +178,101 @@ var heartRates = arrayCalc(ages, maxHeartRate);
 console.log(ages);
 console.log(legalAge);
 console.log(heartRates);
+*/
+
+/************************
+* Function returning functions
+*/
+
+/*
+function interviewQuestions(job) {
+	if (job === 'designer') {
+		return function(name) {
+			console.log(name + ', can you please what an UX design is?');
+		}
+	} else if (job === 'teacher') {
+		return function(name) {
+			console.log('What subject do you teach ' + name + '?');
+		}
+	} else {
+		return function(name) {
+			console.log('Hello ' + name + ', what do you do?');
+		}
+	}
+}
+
+var teacherQuestion = interviewQuestions('teacher');
+var designerQuestion = interviewQuestions('designer');
+
+
+teacherQuestion('John');
+designerQuestion('Quang');
+
+// You can also return the function and call it right away.
+interviewQuestions('Chef')('Mary')
+*/
+
+/************************
+* IIFE
+*/
+
+/*
+function game() {
+	var score = Math.random() * 10;
+	console.log(score >= 5);
+}
+game();
+
+// The game could also be written this way
+(function () {
+	var score = Math.random() * 10;
+	console.log(score >= 5);
+})();
+
+// You can only call an IIFE once. This is not ment to be reused since you cannot access the variable inside of the IIFE.
+(function (goodLuck) {
+	var score = Math.random() * 10;
+	console.log(score >= 5 - 5);
+})(5);
+*/
+
+/************************
+* Closures
+*/
+
+function retirement(retirementAge) {
+	var a = ' years left until retirement.'
+	return function(yearOfBirth) {
+		var age = 2020 - yearOfBirth;
+		console.log((retirementAge - age) + a) ;
+	}
+}
+
+var retirementUS = retirement(66);
+var retirementGermany = retirement(65);
+var retirementIceland = retirement(67);
+
+retirementUS(1994);
+retirementGermany(1994);
+retirementIceland(1994);
+
+// Pratice!
+function interviewQuestions(job) {
+	return function(name) {
+		if (job === 'designer') {
+			console.log(name + ', can you please what an UX design is?');
+		} else if (job === 'teacher') {
+			console.log('What subject do you teach ' + name + '?');
+		} else {
+			console.log('Hello ' + name + ', what do you do?');
+		}
+	}
+}
+
+
+interviewQuestions('designer')('Quang');
+
+
+
+
 
