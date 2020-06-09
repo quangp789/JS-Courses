@@ -143,7 +143,7 @@ console.log(object.city); // City changes to San Francisco
 /*
 var years = [1990, 1965, 2005, 1994, 2010];
 
-function arrayCalc(arr, fn) {
+function arrayCalc(arr, fn) { // Takes in the array and another function
 	var arrRes = [];
 	for(var i = 0; i < arr.length; i++) {
 		arrRes.push(fn(arr[i])); // You loop thought the year array which is inserted into the function, that is pushed into the array.
@@ -240,6 +240,7 @@ game();
 * Closures
 */
 
+/*
 function retirement(retirementAge) {
 	var a = ' years left until retirement.'
 	return function(yearOfBirth) {
@@ -269,10 +270,137 @@ function interviewQuestions(job) {
 	}
 }
 
-
 interviewQuestions('designer')('Quang');
+*/
+
+/************************
+* Bind, Call, and Apply
+*/
+
+/*
+var quang = {
+	name: 'Quang',
+	age: 25,
+	job: 'Teacher',
+	presentation: function(style, timeOfDay) {
+		if (style === 'formal') {
+			console.log('Good ' + timeOfDay + ', Ladies and gentlement! I\'m ' + this.name + ', I\'m a ' + this.job + ' and I\'m ' + this.age + ' years old.');
+		} else if (style === 'friendly') {
+			console.log('Hey! What\'s up! I\'m ' + this.name + ', I\'m a ' + this.job + ' and I\'m ' + this.age + ' years old. Have a nice ' + timeOfDay + '.');
+		}
+	}
+}
+
+quang.presentation('formal', 'morning');
+
+var emily = {
+	name: 'Emily',
+	age: 35,
+	job: 'Designer'
+};
+
+// Method Borrowing: Calling a method from another object
+quang.presentation.call(emily, 'friendly', 'afternoon');
+
+// Applied Method - This wont work since our method does not expect to recieve an array.
+//quang.presentation.call(emily, ['friendly', 'afternoon']);
+
+// Bind Method
+var quangFriendly = quang.presentation.bind(quang, 'friendly'); // This returns a function
+quangFriendly('evening');
+
+var emilyFormal = quang.presentation.bind(emily, 'formal');
+emilyFormal('afternoon');
 
 
 
+var years = [1990, 1965, 2005, 1994, 2010];
 
+function arrayCalc(arr, fn) {
+	var arrRes = [];
+	for(var i = 0; i < arr.length; i++) {
+		arrRes.push(fn(arr[i])); // You loop thought the year array which is inserted into the function, that is pushed into the array.
+	}
+	return arrRes; // Return new array
+}
+
+// El stand for element in this case a generic one that we use.
+
+function calculateAge(el) {
+	return 2020 - el;
+}
+
+function isFullAge(limit, el) {
+	return el >= limit;
+}
+
+var ages = arrayCalc(years, calculateAge); // First calculate the years in the array
+var fullJapan = arrayCalc(ages, isFullAge.bind(this, 20))
+
+console.log(ages);
+console.log(fullJapan);
+*/
+
+/*
+--- Let's build a fun quiz game in the console! ---
+1. Build a function constructor called Question to describe a question. A question should include:
+a) question itself
+b) the answers from which the player can choose the correct one (choose an adequate data structure here, array, object, etc.)
+c) correct answer (I would use a number for this)
+2. Create a couple of questions using the constructor
+3. Store them all inside an array
+4. Select one random question and log it on the console, together with the possible answers (each question should have a number) (Hint: write a method for the Question objects for this task).
+5. Use the 'prompt' function to ask the user for the correct answer. The user should input the number of the correct answer such as you displayed it on Task 4.
+6. Check if the answer is correct and print to the console whether the answer is correct ot nor (Hint: write another method for this).
+7. Suppose this code would be a plugin for other programmers to use in their code. So make sure that all your code is private and doesn't interfere with the other programmers code (Hint: we learned a special technique to do exactly that).
+*/
+
+// Add the IIFE
+(function() {
+ // Build the function constructor
+function Question(question, answers, correct) {
+	this.question = question;
+	this.answers = answers;
+	this.correct = correct;
+}
+
+// This will allow your questions to use this method when making the call depending on the question generated randomly
+Question.prototype.displayQuestion = function() {
+	console.log(this.question);
+
+	//Display the answers
+	for (var i = 0; i < this.answers.length; i++) { // Loops through all the possible answers in the array
+		console.log(i + ': ' + this.answers[i]); // We want to display the element postion as well as the array
+	}
+}
+
+Question.prototype.checkAnswer = function(ans) { // Passing in the answer from the user
+		if (ans === this.correct) {
+			console.log('Correct Answer!');
+		} else {
+			console.log('Wrong Answer. Try again!');
+	}
+}
+
+
+// Create your questions
+var q1 = new Question('Is JavaScript the coolest programming language in the world?', ['Yes', 'No'], 0); // The number at the end represents the correct answer
+var q2 = new Question('What is the name of this course\'s teacher?', ['John', 'Micheal', 'Jonas'], 2);
+var q3 = new Question('What does best describe coding?', ['Boring', 'Hard', 'Fun', 'Tediuos'], 2);
+
+// Store the questions in the array
+var questions = [q1, q2, q3];
+
+// Generate a random number for the questions
+var randomNum = Math.floor(Math.random() * questions.length);// Generates a random WHOLE number between 0 and the total number of elements in the array
+
+// Display the question into a console.
+questions[randomNum].displayQuestion();
+
+// Prompt a box for user to answer
+var answer = parseInt(prompt('Please select the correct answer.')); // Converts an integer into a number
+
+// Check the answer
+questions[randomNum].checkAnswer(answer);
+ })();
 
