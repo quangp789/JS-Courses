@@ -355,6 +355,7 @@ c) correct answer (I would use a number for this)
 7. Suppose this code would be a plugin for other programmers to use in their code. So make sure that all your code is private and doesn't interfere with the other programmers code (Hint: we learned a special technique to do exactly that).
 */
 
+/*
 // Add the IIFE
 (function() {
  // Build the function constructor
@@ -403,4 +404,95 @@ var answer = parseInt(prompt('Please select the correct answer.')); // Converts 
 // Check the answer
 questions[randomNum].checkAnswer(answer);
  })();
+*/
+
+/*
+--- Expert level ---
+8. After you display the result, display the next random question, so that the game never ends (Hint: write a function for this and call it right after displaying the result)
+9. Be careful: after Task 8, the game literally never ends. So include the option to quit the game if the user writes 'exit' instead of the answer. In this case, DON'T call the function from task 8.
+10. Track the user's score to make the game more fun! So each time an answer is correct, add 1 point to the score (Hint: I'm going to use the power of closures for this, but you don't have to, just do this with the tools you feel more comfortable at this point).
+11. Display the score in the console. Use yet another method for this.
+*/
+
+(function() {
+
+function Question(question, answers, correct) {
+	this.question = question;
+	this.answers = answers;
+	this.correct = correct;
+}
+
+Question.prototype.displayQuestion = function() {
+	console.log(this.question);
+
+	for (var i = 0; i < this.answers.length; i++) {
+		console.log(i + ': ' + this.answers[i]);
+	}
+}
+
+Question.prototype.checkAnswer = function(ans, callback) {
+
+		var sc;
+
+		if (ans === this.correct) {
+			console.log('Correct Answer!');
+			sc = callback(true);
+		} else {
+			console.log('Wrong Answer. Try again!');
+			sc = callback(false);
+	}
+
+	this.displayScore(sc);
+}
+
+Question.prototype.displayScore = function(score) {
+	console.log('Your Score: ' + score);
+	console.log('---------------------')
+}
+
+var q1 = new Question('Is JavaScript the coolest programming language in the world?', ['Yes', 'No'], 0); // The number at the end represents the correct answer
+var q2 = new Question('What is the name of this course\'s teacher?', ['John', 'Micheal', 'Jonas'], 2);
+var q3 = new Question('What does best describe coding?', ['Boring', 'Hard', 'Fun', 'Tediuos'], 2);
+
+var questions = [q1, q2, q3];
+
+// Write a function to keep score
+function score() {
+	var sc = 0;
+	// Increase the score if its correct
+	return function(correct) {
+		if (correct) {
+			sc++;
+		}
+
+		return sc // Return the score
+	}
+}
+
+var keepScore = score();
+
+// Created a function to display the next question
+function nextQuestion() {
+
+var randomNum = Math.floor(Math.random() * questions.length);// Generates a random WHOLE number between 0 and the total number of elements in the array
+
+questions[randomNum].displayQuestion();
+
+var answer = prompt('Please select the correct answer.');
+
+// We want to continue with the question until user types exit
+if (answer !== 'exit') {
+	questions[randomNum].checkAnswer(parseInt(answer), keepScore);
+
+	nextQuestion();
+	}
+
+}
+
+// Call the function
+nextQuestion();
+
+
+ })();
+
 
