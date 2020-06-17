@@ -26,7 +26,7 @@ var budgetController = (function() {
 		this.value = value;
 	};
 
-	// Create an object to store all income, expenses, etc
+	// Create a variable to store all income, expenses, etc
 	var data = {
 		allItems: {
 			exp: [],
@@ -34,18 +34,24 @@ var budgetController = (function() {
 		},
 		totals: {
 			exp: 0,
-			inc: 0,
+			inc: 0
 		}
 	};
 
-	// Create a public method to add an expense or income
+	// Create a public method to add an expense or income to our data variable
 	return {
 		addItems: function(type, des, val) {
 			var newItem, ID;
 
-			ID = data.allItems[type][data.allItems[type].length - 1].id;
+			// Create a new ID
+			if (data.allItems[type].length > 0) {
+				ID = data.allItems[type][data.allItems[type].length - 1].id + 1;
+			} else {
+				ID = 0;
+			}
 
-			// Create an object based on the expense or income being selected
+
+			// Create a new item based on the expense or income being selected
 			if (type === 'exp') {
 				newItem = new Expense(ID, des, val);
 			} else if (type === 'inc') {
@@ -58,8 +64,12 @@ var budgetController = (function() {
 			// Return our new array with the object added
 			return newItem;
 
+		},
+		// Testing method to show your array in the log
+		testing: function() {
+			console.log(data)
 		}
-	}
+	};
 
 })();
 
@@ -72,17 +82,61 @@ var UIController = (function() {
 		inputType: '.add__type',
 		inputDescription: '.add__description',
 		inputValue: '.add__value',
-		inputBtn: '.add__btn'
-	}
+		inputBtn: '.add__btn',
+		incomeContainer:'.income__list',
+		expenseContainer:'.expense__list'
+	};
 
 	// Return the methods back to the public
 	return {
+		// Get the user input data
 		getInput: function() {
 			return {
 				type: document.querySelector(DOMstrings.inputType).value, // Will increase or decrease. Value is "inc" or "exp"
 				description: document.querySelector(DOMstrings.inputDescription).value, // Gets the input value
-				value: document.querySelector(DOMstrings.inputValue).value
+				value: parseFloat(document.querySelector(DOMstrings.inputValue).value) // Convert the string into a integer using parse
 			};
+		},
+
+		addListItem: function(obj, type) { // ????
+			var html, newHtml, element;
+
+			// Create HTML string with placeholder text
+			if (type === 'inc') {
+				element = DOMstrings.incomeContainer;
+
+				html = '<div class="item clearfix" id="income-%id%"> <div class="item__description"> %description% </div> <div class="right clearfix"> <div class="item__value">%value%</div> <div class="item__delete"> <button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>';
+			} else if (type === 'exp') {
+				element = DOMstrings.expenseContainer;
+
+				html = '<div class="item clearfix" id="expense-%id%"> <div class="item__description"> %description% </div> <div class="right clearfix"> <div class="item__value">%value%</div> <div class="item__percentage">21%</div> <div class="item__delete"> <button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div </div>';
+			}
+
+			// Replace the placeholder text with some actual data. Replace method replaces our string with new input data
+			newHtml = html.replace('%id%', obj.id);
+			newHtml = newHtml.replace('%description%', obj.description);
+			newHtml = newHtml.replace('%value%', obj.value);
+
+			// Insert HTML to DOM
+			document.querySelector(element).insertAdjacentHTML('beforeend', newHtml);
+		},
+
+		// Clear the input fields
+		clearFields: function() {
+			var fields, fieldsArr;
+
+			// Select the 2 fields. This returns a list
+			fields = document.querySelectorAll(DOMstrings.inputDescription + ', ' + DOMstrings.inputValue);
+
+			// Convert the list into an array.
+			fieldsArr = Array.prototype.slice.call(fields);
+
+			// Loops over the array and clear all the fields that are selected.
+			fieldsArr.forEach(function(current, index, array) {
+				current.value = "";
+			});
+			// Reset focus back to description
+			fieldsArr[0].focus();
 		},
 
 		getDOMstrings: function() {
@@ -95,12 +149,12 @@ var UIController = (function() {
 
 
 // Global App Controller
-var controller = (function(budgetCtrl, UICtrl) {
+var controller = (function(budgetCtrl, UICtrl) { // ????
 
 	// Event listener
 	var setupEventListeners = function() {
 
-		// Retrieve the DOMstring variable from UIController
+		// Retrieve the DOMstring variable from UIController (Closure)
 		var DOM = UICtrl.getDOMstrings();
 
 		document.querySelector(DOM.inputBtn).addEventListener('click', ctrlAddItem); // No need parenthesis cause the .addEventListener will do that for us. Call back function
@@ -115,18 +169,39 @@ var controller = (function(budgetCtrl, UICtrl) {
 
 	};
 
+	var updateBudget = function() {
 
+		// 1. Calculate the budget
+
+		// 2. Return the budget
+
+		// 3. Display the budget on the UI
+	}
+
+	// Create a method to add the item
 	var ctrlAddItem = function() {
+		var input, newItem;
+
 		// 1. Get input data. Obtain the input from the UIController
-		var input = UICtrl.getInput();
+		input = UICtrl.getInput();
 
-		// 2. Add the item to budget controller
+		//User must have a valid input to add an item
+		if (input.description !== ""  && !isNaN(input.value) && input.value > 0) {
 
-		// 3. Add the new item to UI
+			// 2. Add the item to budget controller
+			var newItem = budgetController.addItems(input.type, input.description, input.value);
 
-		// 4. Calculate the budget
+			// 3. Add the new item to UI
+			UICtrl.addListItem(newItem, input.type);
 
-		// 5. Display the budget
+			// 4. Clear the input fields
+			UICtrl.clearFields();
+
+			// 5. Calculate and update the budget
+			updateBudget();
+
+		}
+
 
 	};
 
@@ -138,7 +213,7 @@ var controller = (function(budgetCtrl, UICtrl) {
 		}
 	};
 
-})(budgetControllor, UIController); // This allows you to use your other modules
+})(budgetController, UIController); // This allows you to use your other modules
 
 // init function will start when the page loads
 controller.init();
