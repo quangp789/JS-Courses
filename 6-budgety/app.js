@@ -18,7 +18,23 @@ var budgetController = (function() {
 		this.id = id;
 		this.description = description;
 		this.value = value;
+		this.percentage = -1;
 	};
+
+	// Create a new method to calculate the percentage. Prototype allows you to add new method to your expense constructure
+	Expense.prototype.calcPercentage = function(totalIncome) {
+
+		if (totalIncome > 0) {
+			this.percentage = Math.round((this.value / totalIncome) * 100);
+		} else {
+			this.percentage = - 1;
+		}
+	};
+
+	// Return the calculated percentage
+	Expense.prototype.getPercentage = function() {
+		return this.percentage;
+	}
 
 	var Income = function(id, description, value) {
 		this.id = id;
@@ -122,6 +138,27 @@ var budgetController = (function() {
 
 		},
 
+		// Create a method to calculate the percentage of your expenses
+		calculatePercentages: function() {
+
+			// Calculate the percentage of all your current expenses in the array
+			data.allItems.exp.forEach(function(current){
+				current.calcPercentage(data.totals.inc);
+			});
+
+		},
+
+		// Create a method to get the percentage
+		getPercentages: function() {
+
+			// Return the percentage. Map returns the item and stores it back into the array
+			var allPercentages = data.allItems.exp.map(function(current) {
+				return current.getPercentage();
+			});
+
+			return allPercentages;
+		},
+
 		// Return the calculate variables
 		getBudget: function() {
 			return {
@@ -156,7 +193,47 @@ var UIController = (function() {
 		incomeLabel: '.budget__income--value',
 		expenseLabel: '.budget__expenses--value',
 		percentageLabel: '.budget__expenses--percentage',
-		container: '.container'
+		container: '.container',
+		expensesPercentageLabel: '.item__percentage',
+		dateLabel: '.budget__title--month'
+	};
+
+	// Create a method to properly format the numbers
+	var formatNumber = function(num, type) {
+
+		var numSplit, int, dec, type;
+
+		/*
+		2230.1238 > + 2230.12
+		*/
+
+		// abs - Returns the absoluate value of a number
+		num = Math.abs(num);
+		// Convert a number into a string, rounding the number to 2 decimals
+		num = num.toFixed(2);
+		// Place a period between the whole number and the decimal
+		numSplit = num.split('.');
+
+		int = numSplit[0];
+
+		// If the intege is greater than 3, add a comma.
+		if (int.length > 3) {
+			// substr - extracts the characters from a string. It includes the start but not the end.
+			int = int.substr(0, int.length - 3) + ',' +int.substr(int.length - 3, 3); // input: 23456 output: 23,456
+		}
+
+		dec = numSplit[1];
+
+		// If type is expense then sign should be minus else its plus > 123456.098 = + 123,456.09
+		return (type === 'exp' ? '-' : '+') + ' ' + int + '.' + dec;
+
+	};
+
+	//???
+	var nodeListForEach = function(list, callback) {
+		for (var i = 0; i < list.length; i++) {
+			callback(list[i], i);
+		}
 	};
 
 	// Return the methods back to the public
@@ -170,13 +247,14 @@ var UIController = (function() {
 			};
 		},
 
-		addListItem: function(obj, type) { // ????
+		addListItem: function(obj, type) { // You'll need to pass argument: object (newItem) and the type (inc or exp)
 			var html, newHtml, element;
 
 			// Create HTML string with placeholder text
 			if (type === 'inc') {
 				element = DOMstrings.incomeContainer;
 
+				// Store the html div into a variable
 				html = '<div class="item clearfix" id="inc-%id%"> <div class="item__description"> %description% </div> <div class="right clearfix"> <div class="item__value">%value%</div> <div class="item__delete"> <button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>';
 			} else if (type === 'exp') {
 				element = DOMstrings.expenseContainer;
@@ -187,7 +265,7 @@ var UIController = (function() {
 			// Replace the placeholder text with some actual data. Replace function replaces our string with new input data
 			newHtml = html.replace('%id%', obj.id);
 			newHtml = newHtml.replace('%description%', obj.description);
-			newHtml = newHtml.replace('%value%', obj.value);
+			newHtml = newHtml.replace('%value%', formatNumber(obj.value, type));
 
 			// Insert HTML to DOM
 			document.querySelector(element).insertAdjacentHTML('beforeend', newHtml);
@@ -220,10 +298,13 @@ var UIController = (function() {
 
 		// Display your budget onto you webpage
 		displayBudget: function(obj) {
+				var type;
+				// If the budget > 0 then type is inc else exp
+				obj.budget > 0 ? type = 'inc' : type = 'exp';
 
-				document.querySelector(DOMstrings.budgetLabel).textContent = obj.budget;
-				document.querySelector(DOMstrings.incomeLabel).textContent = obj.totalInc;
-				document.querySelector(DOMstrings.expenseLabel).textContent = obj.totalExp;
+				document.querySelector(DOMstrings.budgetLabel).textContent = formatNumber(obj.budget,type);
+				document.querySelector(DOMstrings.incomeLabel).textContent = formatNumber(obj.totalInc, 'inc');
+				document.querySelector(DOMstrings.expenseLabel).textContent = formatNumber(obj.totalExp, 'exp');
 
 			// You want to make sure it displays ether an empty percentage or and actual percentage with the symbol
 			if (obj.percentage > 0) {
@@ -231,6 +312,56 @@ var UIController = (function() {
 			} else {
 				document.querySelector(DOMstrings.percentageLabel).textContent = '---';
 			}
+		},
+
+		// Create a method to display your percentages
+		displayPercentages: function(percentages) {
+
+			// querySelectorAll - returns a node list and stores it into the variable
+			var fields = document.querySelectorAll(DOMstrings.expensesPercentageLabel);
+
+			// Loop each element of the node list and update the value (no calculations done here)
+			fields.forEach(function(value, index) {
+				if (percentages[index] > 0) {
+					value.innerText = percentages[index] + '%';
+				} else {
+					value.innerText = '---';
+				}
+			});
+
+		},
+
+		// Create a method to display the month and year
+		displayMonth: function() {
+
+			var now, month, year;
+
+			// Date object is used to work with date and times. Returns present date if nothing is passed
+			now = new Date();
+
+			// Store all the months into an array
+			months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+			month = now.getMonth();
+
+			year = now.getFullYear();
+			document.querySelector(DOMstrings.dateLabel).textContent = months[month] + ' ' + year;
+
+		},
+
+		// You want to change the outline color when exp is selected
+		changedType: function() {
+
+			 var fields = document.querySelectorAll(
+			 	DOMstrings.inputType + ',' +
+				DOMstrings.inputDescription + ',' +
+				DOMstrings.inputValue);
+
+			//????
+			nodeListForEach(fields, function(current) {
+				current.classList.toggle('red-focus');
+			});
+
+			document.querySelector(DOMstrings.inputBtn).classList.toggle('red');
 		},
 
 		getDOMstrings: function() {
@@ -243,8 +374,7 @@ var UIController = (function() {
 
 
 // GLOBAL APP CONTROLLER
-var controller = (function(budgetCtrl, UICtrl) { // ????
-
+var controller = (function(budgetCtrl, UICtrl) { // Refereces budgetController and UIController since we have access to other module
 	// Event listener
 	var setupEventListeners = function() {
 
@@ -264,6 +394,8 @@ var controller = (function(budgetCtrl, UICtrl) { // ????
 		// You want to run the function ctrlDeleteItem when the button is clicked
 		document.querySelector(DOM.container).addEventListener('click', ctrlDeleteItem);
 
+		document.querySelector(DOM.inputType).addEventListener('change', UICtrl.changedType)
+
 	};
 
 	var updateBudget = function() {
@@ -281,17 +413,17 @@ var controller = (function(budgetCtrl, UICtrl) { // ????
 	var updatePercentages = function () {
 
 		// Calculate percentage
-
+		budgetCtrl.calculatePercentages();
 
 		// Read the percentage from budget controller
-
+		var percentages = budgetCtrl.getPercentages();
 
 		// Update the UI with the new percentages
-
+		UICtrl.displayPercentages(percentages);
 
 	};
 
-	// Create a method to add the item
+	// Create a function to add the item
 	var ctrlAddItem = function() {
 		var input, newItem;
 
@@ -355,6 +487,7 @@ var controller = (function(budgetCtrl, UICtrl) { // ????
 	return {
 		init: function() {
 			console.log('Application has started.');
+			UICtrl.displayMonth();
 			UICtrl.displayBudget({
 				budget: 0,
 				totalInc: 0,
