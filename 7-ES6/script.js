@@ -461,7 +461,7 @@
 	const ans = parseInt(prompt('Write the correct answer')); // Change the input from string to a int
 
 	console.log(question.get(ans === question.get('correct'))); // If the input is the same as the answer then the expression will be true
-	*/
+
 
 // Classes
 
@@ -510,11 +510,172 @@
 	quang6.calculateAge();
 
 
+// Classes and Subclasses
+
+	//ES5
+	var Person5 = function(name, yearOfBirth, job) {
+		this.name = name;
+		this.yearOfBirth = yearOfBirth;
+		this.job = job;
+	}
+
+	// create a calculateAge mathod
+	Person5.prototype.calculateAge = function() {
+		var age = new Date().getFullYear() - this.yearOfBirth;
+		console.log(age);
+	}
 
 
+	var Athlete5 = function(name, yearOfBirth, job, olympicGames, medals) {
+		Person5.call(this, name, yearOfBirth, job); // This refers to the "owner" (refers to Athlete5) of the function
+		this.olympicGames = olympicGames;
+		this.medal = medals;
+	}
+
+	// Athlete5 is the sub class of Person5
+	Athlete5.prototype = Object.create(Person5.prototype); // Creates a new object using Person5 object as the prototype
+
+	// Person5 will not inherit this method b/c its a sub instance of Athlete5
+	Athlete5.prototype.wonMedal = function() {
+		this.medal++;
+		console.log(this.medal);
+	}
+
+	var johnAthlete5 = new Athlete5('John', 1990, 'swimmer', 3, 10);
+
+	johnAthlete5.calculateAge();
+	johnAthlete5.wonMedal();
+
+	// ES6
+	class Person6 {
+		constructor (name, yearOfBirth, job) {
+			this.name = name;
+			this.yearOfBirth = yearOfBirth;
+			this.job = job;
+		}
+
+		// Functions can directly add to the class
+		calculateAge() {
+			var age = new Date().getFullYear() - this.yearOfBirth;
+			console.log(age);
+		}
+
+	}
+
+	// "extends" allows you to create a subclass of the original object
+	class Athlete6 extends Person6 {
+		constructor(name, yearOfBirth, job, olympicGames, medals) {
+			// Calls the parent constructor w/o having to use this
+			super(name, yearOfBirth, job);
+			this.olympicGames = olympicGames;
+			this.medals = medals;
+		}
+
+		wonMedal(){
+			this.medals++;
+			console.log(this.medals);
+		}
+	}
+
+	const johnAthlete6 = new Athlete6('John', 1990, 'swimmer', 3, 10);
+
+	johnAthlete6.calculateAge();
+	johnAthlete6.wonMedal();
+	*/
+// Coding Challenge 8
+	// Create the element class containing the name and build year
+	class Element {
+		constructor(name, buildYear) {
+			this.name = name;
+			this.buildYear = buildYear;
+		}
+	}
+
+	// Create the park class that extends from Element with area and number of trees
+	class Park extends Element {
+		constructor(name, buildYear, area, numberOfTrees) {
+			super(name, buildYear);
+			this.area = area; //km2 is the unit
+			this.numberOfTrees = numberOfTrees;
+		}
+
+		// Calculate the tree density
+		treeDensity() {
+			const density = this.numberOfTrees / this.area;
+			console.log(`${this.name} has a tree density of ${density} trees per square km.`);
+		}
+
+	}
+
+	// Create a Street class that extends from Element with length and size of the street
+	class Street extends Element {
+		constructor(name, buildYear, length, size = 3) {
+			super(name, buildYear);
+			this.length = length;
+			this.size = size;
+		}
+
+		classifyStreet() {
+
+			// Create a map to store all your street size options
+			const streetSize = new Map();
+			streetSize.set(1, 'Tiny');
+			streetSize.set(2, 'Small');
+			streetSize.set(3, 'Normal');
+			streetSize.set(4, 'Big');
+			streetSize.set(5, 'Huge');
+			// use the get method to get the size of the street from your map
+			console.log(`${this.name}, build in ${this.buildYear}, is a ${streetSize.get(this.size)} street.`);
+		}
+	}
 
 
+	// Create an array to store all the parks and streets
+	const allParks = [new Park ('Park1', 1900, 0.5, 300),
+					  new Park('Park2', 1930, 2.9, 2500),
+					  new Park('Park3', 1990, 0.8, 546)];
 
+	const allStreets = [new Street('Street1', 1800, 1.0, 4),
+                        new Street('Street2', 2008, 2.0, 2),
+                        new Street('Street3', 2015, 1.8), // Street size has been set by default parameter
+                        new Street('Street4', 1982, 3.1, 5)];
 
+	// Calculate the each parks average age
+	function calc(arr) {
 
+		// Reduce method reduces to a single value. The 0 is your starting sum
+		const sum = arr.reduce((prev, cur, index) => prev + cur, 0);
 
+		return [sum, sum / arr.length];
+	}
+
+	// Create a function to generate the reports
+	function reportPark(p) {
+		console.log('-----Parks Report-----');
+
+		// Calculate density
+		p.forEach(el => el.treeDensity());
+
+		// Calculate average age
+		const ages = p.map(el => new Date().getFullYear() - el.buildYear);
+		const [totalAge, averageAge] = calc(ages);
+		console.log(`Our ${p.length} parks have an average of ${averageAge} years.`);
+
+		// Select the park with 1000 trees
+		const i = p.map(el => el.numberOfTrees).findIndex(el => el >= 1000);
+		console.log(`${p[i].name} has more than 1000 trees`);
+	}
+
+	function reportStreet(s) {
+		console.log('-----Streets Report-----');
+
+		// Total and average length of the town's street
+		const [totalLength, avgLength] = calc(s.map(el => el.length));
+		console.log(`Our ${s.length} streets have a total length of ${totalLength} km, with an average of ${avgLength} km.`);
+
+		// Classify sizes
+		s.forEach(el => el.classifyStreet());
+	}
+
+	reportPark(allParks);
+	reportStreet(allStreets);
