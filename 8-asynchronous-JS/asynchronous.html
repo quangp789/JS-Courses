@@ -9,6 +9,156 @@
 <body>
     <h1>Asynchronous JavaScript</h1>
     <script>
+		/*
+		const second = () => {
+			setTimeout(() => {
+				console.log('Async Hello!')
+			}, 2000) // using the setTimeout method, we set this function to wait 2000 millisecond (2 second) before running
+		}
+
+		const first = () => {
+			console.log('Hello');
+			second();
+			console.log('The end')
+		}
+
+		first();
+		*/
+
+		/*
+		function getRecipie() {
+			setTimeout(() => {
+				const recipeID = [523, 883, 432, 974];
+				console.log(recipeID); // This line here will execute first
+
+				setTimeout(id => {
+					const recipe = {title: 'Fresh tomato pasta', publisher: 'Quang'};
+					console.log(`${id}: ${recipe.title}`); // This will then execute second, 1 second later
+
+					setTimeout (publisher => {
+						const recipe2 = {title: 'Italian Pizza', publisher: 'Quang'};
+						console.log(recipe); // This will execute third, 2 seconds later
+					}, 2000, recipe.publisher); // 2 second delay
+
+				}, 1000, recipeID[2]); // 1 second delay, recipeID is the third argument passed, which will reference 2nd element in the array
+
+			}, 1500); // 1.5 second delay
+
+		}
+
+		getRecipie();
+		*/
+
+		/*
+		// Resolve or Reject function will be called depending if the promise is sucessfull or not
+		const getIDs = new Promise((resolve, reject) => {
+			setTimeout(() => {
+				// Resolve function will be called because the promise was fulfilled by waiting 2 seconds
+				resolve([523, 883, 432, 974]);
+			}, 2000);
+		});
+
+		// Passing recipeID as an argument which returns a new promise
+		const getRecipe = recID => {
+			return new Promise((resolve, reject) => {
+				setTimeout(ID => {
+					const recipe = {title: 'Fresh Tomato Pasta', publisher: 'Quang'};
+					resolve(`${ID}: ${recipe.title}`);
+				}, 1500, recID); // recID then gets passed into the setTimeout method
+			});
+		};
+
+		const getRelated = publisher => {
+			return new Promise((resolve, reject) => {
+				setTimeout(pub => {
+					const recipe = {title: 'Italian Pizza', publisher: 'Quang'};
+					resolve(`${pub}: ${recipe.title}`);
+				}, 1500, publisher);
+			});
+		};
+
+		// This is an asynchronous function (this runs in the background).
+		async function getRecipiesAW() {
+			// Consuming first promise. await will stop execution of getIDs until the promise is fulfilled
+			const IDs = await getIDs; // Promise is stored into the IDs variable
+			console.log(IDs);
+			const recipe = await getRecipe(IDs[2]); // This is where we consume our second promise
+			console.log(recipe);
+			const related = await getRelated('Quang');
+			console.log(related);
+
+			return recipe;
+		}
+
+		// Aync function will always return a promise in which we can then consume like the following:
+		getRecipiesAW().then(result => console.log(`${result} is the best ever!`));
+
+
+		** Consuming Promises **
+		// Using the then an catch method we can consume our promises
+		getIDs
+		.then(IDs => { // IDs is the perameter(or argument) we're passing. In this case its the array.
+			console.log(IDs);
+			return getRecipe(IDs[2]); // This will return a new promise
+		})
+		.then(recipe => { // Which will THEN can be used here!
+			console.log(recipe);
+			return getRelated('Quang');
+		})
+		.then(recipe => {
+			console.log(recipe);
+		})
+		.catch(error => {
+			console.log('Error!');
+		})
+		*/
+
+		/*
+		function getWeather(woeid){
+			// You wanna pass in the API URL into the fetch method as a string
+			// Moesif Orign & CORS chrome extension is used to fetch this API since we are practicing locally
+			fetch(`https://www.metaweather.com/api/location/${woeid}/`) // Automatically returns a promise
+			.then(result => { // The fetch AJAX request will be called result
+				console.log(result);
+				return result.json(); // This will process the data (body:ReadableSteam). Returns a promise
+			})
+			.then(data => {
+				console.log(data);
+				const today = data.consolidated_weather[0];
+				// data.title refers to the data returned from json while today refers to the consolidated_weather[0] array
+				console.log(`Todays temperatures in ${data.title} will stay between ${today.min_temp} and ${today.max_temp}.`);
+			})
+			.catch(error => console.log(error));
+		}
+
+		getWeather(2487956);
+		getWeather(44418);
+		*/
+
+		// getWeatherAW - AW stands for Async/Await
+		async function getWeatherAW(woeid) {
+			// Using a try-catch statement
+			try {
+				// Store the API call into a variable
+				const result = await fetch(`https://www.metaweather.com/api/location/${woeid}/`); // This will return as a promise
+				const data = await result.json(); // Return the processed data and store it into a variable
+				const day = data.consolidated_weather; // Same thing as above store the temperatures array into a variable
+				console.log(`Todays temperatures in ${data.title} will stay between ${day[0].min_temp} and ${day[0].max_temp}.`);
+				return data;
+			}
+			catch(error) {
+				alert(error);
+		}
+
+		}
+
+		getWeatherAW(2487956); // San Fran
+
+		let dataLondon;
+		getWeatherAW(44418).then(data => {  // The returned data in line 148 can then be used on the getWeatherAW promise using then()
+			dataLondon = data;
+			console.log(dataLondon);
+		});
 
     </script>
 </body>
